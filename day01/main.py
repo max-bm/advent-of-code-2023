@@ -6,15 +6,12 @@ def read_input_file(filename: str) -> List[str]:
         return [line.rstrip() for line in f]
 
 
-INPUT = read_input_file("input.txt")
-
-
-def part_one() -> int:
-    numbers = ["".join([c for c in line if c.isdigit()]) for line in INPUT]
+def part_one(puzzle_input: List[str]) -> int:
+    numbers = ["".join([c for c in line if c.isdigit()]) for line in puzzle_input]
     return sum([int(x[0] + x[-1]) for x in numbers])
 
 
-def part_two() -> int:
+def part_two(puzzle_input: List[str]) -> int:
     numbers = [
         "one",
         "two",
@@ -39,7 +36,7 @@ def part_two() -> int:
         return input.replace(substrings[number], str(number + 1))
 
     replace_forward, replace_backward = [], []
-    for line in INPUT:
+    for line in puzzle_input:
         replace_forward.append(
             "".join([c for c in replace(line, numbers) if c.isdigit()])
         )
@@ -56,5 +53,6 @@ def part_two() -> int:
 
 
 if __name__ == "__main__":
-    print(part_one())
-    print(part_two())
+    puzzle_input = read_input_file("input.txt")
+    print(part_one(puzzle_input))
+    print(part_two(puzzle_input))
