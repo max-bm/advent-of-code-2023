@@ -1,11 +1,6 @@
 from typing import List
 
 
-def read_input_file(filename: str) -> List[str]:
-    with open(filename, "r") as f:
-        return [line.rstrip() for line in f]
-
-
 def part_one(puzzle_input: List[str]) -> int:
     numbers = ["".join([c for c in line if c.isdigit()]) for line in puzzle_input]
     return sum([int(x[0] + x[-1]) for x in numbers])
@@ -50,6 +45,11 @@ def part_two(puzzle_input: List[str]) -> int:
             )
         )
     return sum([int(x[0] + y[0]) for x, y in zip(replace_forward, replace_backward)])
+
+
+def read_input_file(filename: str) -> List[str]:
+    with open(filename, "r") as f:
+        return [line.rstrip() for line in f]
 
 
 if __name__ == "__main__":
