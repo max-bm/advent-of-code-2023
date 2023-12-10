@@ -37,7 +37,7 @@ def read_input_file(filename: str) -> List[str]:
 
 
 if __name__ == "__main__":
+    test_input = read_input_file("test_input.txt")
     puzzle_input = read_input_file("input.txt")
-    # test_input = read_input_file("test_input.txt")
     print(part_one(puzzle_input))
     print(part_two(puzzle_input))
