@@ -1,5 +1,6 @@
 from typing import List
 import re
+import math
 
 
 def part_one(puzzle_input: List[str]) -> None:
@@ -18,7 +19,16 @@ def part_one(puzzle_input: List[str]) -> None:
 
 
 def part_two(puzzle_input: List[str]) -> None:
-    ...
+    def colour_min(game: str, colour: str) -> int:
+        colour_idx = [r.start() for r in re.finditer(colour, game)]
+        return max([int(game[i - 3 : i - 1]) for i in colour_idx])
+
+    return sum(
+        [
+            math.prod([colour_min(game, c) for c in ["red", "green", "blue"]])
+            for game in puzzle_input
+        ]
+    )
 
 
 def read_input_file(filename: str) -> List[str]:
@@ -28,6 +38,6 @@ def read_input_file(filename: str) -> List[str]:
 
 if __name__ == "__main__":
     puzzle_input = read_input_file("input.txt")
-    test_input = read_input_file("test_input.txt")
+    # test_input = read_input_file("test_input.txt")
     print(part_one(puzzle_input))
-    print(part_two(test_input))
+    print(part_two(puzzle_input))
