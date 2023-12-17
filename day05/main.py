@@ -22,6 +22,8 @@ def part_two(puzzle_input: List[str]) -> None:
     locs = []
     for r in ranges:
         for map in maps:
+            r_max = max([int(x[1]) for x in r])
+            map = complete_map(r_max, map)
             r = split_ranges(r, map)
             r = [(compute_mapping(x, map), compute_mapping(y, map)) for x, y in r]
         locs += [x for x, _ in r]
@@ -33,9 +35,22 @@ def compute_mapping(seed: int, map: List[str]) -> int:
         d, s, l = [int(x) for x in m.split()]
         if s <= seed < s + l:
             return seed - (s - d)
-        else:
-            continue
     return seed
+
+
+def complete_map(r_max: int, map: List[str]) -> List[str]:
+    left = 0
+    ordered_s = [
+        (int(m.split()[1]), int(m.split()[1]) + int(m.split()[2]) - 1) for m in map[1:]
+    ]
+    ordered_s.sort()
+    for x, y in ordered_s:
+        if left < x:
+            map.append(f"{left} {left} {x - left - 1}")
+        left = y + 1
+    if left < r_max:
+        map.append(f"{left} {left} {r_max - left - 1}")
+    return map
 
 
 def split_ranges(
@@ -45,27 +60,16 @@ def split_ranges(
     for r in source_ranges:
         ranges = []
         left, right = r
-        s_min = int(min([m.split()[1] for m in map[1:]]))
-        s_max = int(max([int(m.split()[1]) + int(m.split()[2]) - 1 for m in map[1:]]))
-        if left < s_min:
-            if right < s_min:
-                ranges.append((left, right))
-            else:
-                ranges.append((left, s_min - 1))
-                ranges += [*split_ranges([(s_min, right)], map)]
-        elif left > s_max:
-            ranges.append((left, right))
-        else:
-            for m in map[1:]:
-                _, s, l = [int(x) for x in m.split()]
-                if s <= left < s + l:
-                    if right < s + l:
-                        ranges.append((left, right))
-                        break
-                    else:
-                        ranges.append((left, s + l - 1))
-                        ranges += [*split_ranges([(s + l, right)], map)]
-                        break
+        for m in map[1:]:
+            _, s, l = [int(x) for x in m.split()]
+            if s <= left < s + l:
+                if right < s + l:
+                    ranges.append((left, right))
+                    break
+                else:
+                    ranges.append((left, s + l - 1))
+                    ranges += [*split_ranges([(s + l, right)], map)]
+                    break
         locs.append(ranges)
     return [x for sublist in locs for x in sublist]
 
